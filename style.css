@@ -19,8 +19,7 @@ body {
     align-items: center; /* Zentriert den Inhalt vertikal */
     min-height: 100vh;
     box-sizing: border-box;
-    overflow-x: hidden;
-    /* overflow-y wird durch JS gesteuert, damit man erst nach den Animationen scrollen kann */
+    overflow: hidden; /* Standardmäßig scrollen verhindern, wird per JS aktiviert */
 }
 
 /* Intro Overlay */
@@ -55,41 +54,66 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Karten-Container */
-.card-container {
+/* Carousel Wrapper - Dieser umschließt den sichtbaren Bereich */
+.carousel-wrapper {
+    position: relative;
     width: 100%;
-    max-width: 400px; /* Kartenbreite für mobile Ansicht */
-    perspective: 1000px; /* Für 3D-Effekte */
-    padding: 20px;
-    box-sizing: border-box;
+    height: 100vh; /* Nimmt die gesamte Höhe ein */
+    overflow: hidden; /* Scrollen des Wrappers verhindern */
     display: flex;
-    flex-direction: column; /* Karten untereinander */
-    gap: 20px; /* Abstand zwischen den Karten */
-    position: relative; /* Für Scroll-Indikator */
+    justify-content: flex-start; /* Karten links ausrichten, werden durch JS verschoben */
+    align-items: center;
     opacity: 0; /* Anfangs unsichtbar */
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    padding-bottom: 80px; /* Platz für Scroll-Indikator */
+}
+
+/* Card Container - Enthält alle Karten und ist scrollbar */
+.card-container {
+    display: flex; /* Karten nebeneinander */
+    height: 100%; /* Nimmt die Höhe des Wrappers ein */
+    padding: 0 50px; /* Polsterung an den Seiten, damit die Karte zentriert ist */
+    box-sizing: border-box;
+    scroll-snap-type: x mandatory; /* Karten rasten beim Scrollen ein */
+    -webkit-overflow-scrolling: touch; /* Verbesserter Scroll auf iOS */
+    overflow-x: hidden; /* Zuerst versteckt, wird per JS aktiviert */
+    overflow-y: hidden; /* Kein vertikales Scrollen */
+    position: absolute; /* Für genaue Positionierung */
+    left: 50%; /* Zentriert den Startpunkt */
+    transform: translateX(-50%); /* Korrigiert die Zentrierung */
+    transition: transform 0.5s ease-out; /* Für sanftes Verschieben per JS */
 }
 
 /* Einzelne Karte */
 .card {
+    flex-shrink: 0; /* Verhindert, dass Karten schrumpfen */
+    width: calc(100vw - 100px); /* Kartenbreite: Viewport-Breite - 100px Polsterung */
+    max-width: 400px; /* Maximale Breite einer Karte */
+    height: 80vh; /* Höhe der Karte, damit sie gut in den Viewport passt */
     background-color: var(--card-background);
     border-radius: 12px;
     box-shadow: 0 8px 25px var(--card-shadow);
+    margin: auto 25px; /* Abstand zwischen den Karten + Zentrierung */
     padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Inhalt vertikal zentrieren */
+    align-items: center; /* Inhalt horizontal zentrieren */
     text-align: center;
-    transform-style: preserve-3d; /* Wichtig für 3D-Transformationen */
-    opacity: 0; /* Karten sind anfangs unsichtbar */
-    transform: translateY(50px) rotateX(10deg); /* Startposition für Animation */
-    transition: transform 0.7s ease-out, opacity 0.7s ease-out;
+    scroll-snap-align: center; /* Karte rastet in der Mitte ein */
+    opacity: 0; /* Anfangs unsichtbar */
+    transform: scale(0.8) translateY(20px); /* Startposition für Animation */
+    transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.7s ease-out; /* Federnder Effekt */
+}
+
+/* Zustand der Karte, wenn sie sichtbar ist */
+.card.show {
+    opacity: 1;
+    transform: scale(1) translateY(0);
 }
 
 /* Inhalte der Karten */
-.card-content {
-    /* Flexibel für Inhalt */
-}
-
 header h1 {
     font-family: 'Playfair Display', serif;
     font-size: 2.5em;
@@ -104,6 +128,15 @@ header h2 {
     color: var(--text-color-light);
     font-weight: 400;
     margin-top: 0;
+}
+
+.card-content {
+    flex-grow: 1; /* Inhalt nimmt verfügbaren Platz ein */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .card-content h3 {
@@ -144,6 +177,7 @@ header h2 {
     letter-spacing: 0.5px;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
+    margin-top: 20px; /* Abstand zum oberen Text */
 }
 
 .rsvp-button:hover {
@@ -169,12 +203,6 @@ header h2 {
     color: var(--accent-color);
 }
 
-/* Animation für einzelne Karten */
-.card.show {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-}
-
 /* Scroll Indikator */
 .scroll-indicator {
     position: fixed;
@@ -185,22 +213,22 @@ header h2 {
     font-size: 0.9em;
     opacity: 0;
     visibility: hidden;
-    animation: fadeInScrollIndicator 1s ease-out forwards;
-    animation-delay: 4s; /* Erscheint nach allen Kartenanimationen */
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    z-index: 100;
 }
 
 .scroll-indicator p {
     margin-bottom: 5px;
 }
 
-.arrow-down {
+.arrow-right {
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 12px solid var(--primary-color);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--primary-color);
     margin: 0 auto;
-    animation: bounce 1.5s infinite;
+    animation: bounceRight 1.5s infinite;
 }
 
 /* Keyframes für Scroll-Indikator */
@@ -209,13 +237,13 @@ header h2 {
     to { opacity: 1; visibility: visible; }
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-5px); }
-    60% { transform: translateY(-3px); }
+@keyframes bounceRight {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(3px); }
 }
 
-/* Button Pulse Animation (für den RSVP-Button) */
+/* Button Pulse Animation */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.02); }
@@ -228,11 +256,10 @@ header h2 {
 
 /* Responsive Anpassungen */
 @media (max-width: 480px) {
-    .card-container {
-        padding: 10px;
-    }
     .card {
-        padding: 20px 15px;
+        width: calc(100vw - 60px); /* Kartenbreite für sehr kleine Bildschirme */
+        margin: auto 15px; /* Kleinerer Rand zwischen Karten */
+        padding: 25px 15px;
     }
     header h1 {
         font-size: 2em;
@@ -251,12 +278,9 @@ header h2 {
         font-size: 1.1em;
     }
     .intro-text {
-        font-size: 2.5em;
+        font-size: 2.2em;
     }
-}
-
-/* CSS-Klasse für Klick-Effekt auf Button */
-.rsvp-button.clicked {
-    transform: scale(0.95);
-    box-shadow: 0 2px 5px rgba(255, 127, 80, 0.4);
+    .carousel-wrapper {
+        padding: 0; /* Keine zusätzliche Polsterung auf sehr kleinen Screens */
+    }
 }
