@@ -1,39 +1,76 @@
 :root {
-    --primary-color: #5C8374; /* Dunkles Grün/Grau */
-    --secondary-color: #9EC8B9; /* Helles Grün */
-    --accent-color: #FF7F50; /* Korallenrot für Akzente, passend zu BBQ */
-    --text-color-dark: #333;
-    --text-color-light: #f8f8f8;
-    --background-light: #F8F8F8;
-    --background-dark: #2C3E50; /* Dunkelblau für Kontrast, falls wir einen dunklen Modus hätten */
+    --primary-color: #9EC8B9; /* Helles Grün für Überschriften/Akzente */
+    --secondary-color: #5C8374; /* Dunkleres Grün für Rahmen */
+    --accent-color: #FF7F50; /* Korallenrot für den Button, passend zu BBQ */
+    --text-color-dark: #333; /* Wird im dunklen Modus nicht genutzt */
+    --text-color-light: #f8f8f8; /* Helle Schriftfarbe */
+    --background-dark: #1A1A1A; /* Sehr dunkler Hintergrund */
+    --card-background: #2C2C2C; /* Etwas helleres Grau für Karten */
 }
 
 body {
     font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--background-light);
-    color: var(--text-color-dark);
+    background-color: var(--background-dark);
+    color: var(--text-color-light); /* Standard-Textfarbe ist jetzt hell */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Start am oberen Rand für bessere Lesbarkeit auf mobilen Geräten */
+    align-items: flex-start;
     min-height: 100vh;
     box-sizing: border-box;
-    overflow-x: hidden; /* Verhindert horizontales Scrollen */
+    overflow-x: hidden;
+    overflow-y: auto; /* Erlaubt Scrollen, wenn nötig */
 }
 
 .container {
     width: 100%;
-    max-width: 600px; /* Begrenzung der Breite für mobile Ansicht */
-    background-color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    background-color: var(--card-background); /* Dunklere Karten */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Stärkerer Schatten */
     border-radius: 12px;
-    margin: 20px auto; /* Zentriert den Container und gibt etwas Luft */
+    margin: 20px auto;
     padding: 30px 20px;
     text-align: center;
-    overflow: hidden; /* Wichtig für Animationen */
+    opacity: 0; /* Container ist anfangs unsichtbar */
+    transform: translateY(20px); /* Leicht verschoben */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Übergang für das Erscheinen */
 }
 
+/* Intro Overlay */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease-out, visibility 1s ease-out;
+}
+
+.intro-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 3em;
+    color: var(--primary-color);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInIntroText 1.5s ease-out forwards;
+}
+
+/* Keyframes für Intro-Text Animation */
+@keyframes fadeInIntroText {
+    0% { opacity: 0; transform: translateY(20px); }
+    50% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Header Anpassungen für dunkles Design */
 header {
     margin-bottom: 40px;
     padding-bottom: 20px;
@@ -43,7 +80,7 @@ header {
 header h1 {
     font-family: 'Playfair Display', serif;
     font-size: 2.8em;
-    color: var(--primary-color);
+    color: var(--primary-color); /* Helle Farbe für Überschrift */
     margin-bottom: 10px;
     font-weight: 700;
 }
@@ -51,14 +88,15 @@ header h1 {
 header h2 {
     font-family: 'Raleway', sans-serif;
     font-size: 1.5em;
-    color: var(--text-color-dark);
+    color: var(--text-color-light); /* Helle Textfarbe */
     font-weight: 400;
     margin-top: 0;
 }
 
+/* Details Sektion Anpassungen */
 .details {
     display: flex;
-    flex-wrap: wrap; /* Erlaubt Umbruch auf kleineren Bildschirmen */
+    flex-wrap: wrap;
     justify-content: space-around;
     gap: 20px;
     margin-bottom: 40px;
@@ -67,17 +105,17 @@ header h2 {
 }
 
 .detail-item {
-    flex: 1 1 280px; /* Ermöglicht Flexibilität und Umbruch */
-    background-color: var(--background-light);
+    flex: 1 1 280px;
+    background-color: var(--background-dark); /* Dunklerer Hintergrund für Detail-Items */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Etwas stärkerer Schatten */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .detail-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .detail-item h3 {
@@ -92,6 +130,7 @@ header h2 {
     font-size: 1.1em;
     line-height: 1.6;
     margin-bottom: 5px;
+    color: var(--text-color-light); /* Helle Textfarbe */
 }
 
 .map-link {
@@ -105,6 +144,7 @@ header h2 {
     color: var(--primary-color);
 }
 
+/* RSVP Sektion Anpassungen */
 .rsvp {
     margin-bottom: 40px;
     padding-bottom: 20px;
@@ -122,6 +162,7 @@ header h2 {
     font-size: 1.1em;
     margin-bottom: 25px;
     line-height: 1.6;
+    color: var(--text-color-light); /* Helle Textfarbe */
 }
 
 .rsvp-button {
@@ -147,6 +188,7 @@ header h2 {
 .contact-info {
     margin-top: 25px;
     font-size: 1em;
+    color: var(--text-color-light); /* Helle Textfarbe */
 }
 
 .contact-info a {
@@ -160,6 +202,7 @@ header h2 {
     color: var(--accent-color);
 }
 
+/* Footer Anpassungen */
 footer {
     margin-top: 30px;
     padding-top: 20px;
@@ -167,12 +210,10 @@ footer {
 
 footer p {
     font-size: 1em;
-    color: var(--text-color-dark);
+    color: var(--text-color-light); /* Helle Textfarbe */
 }
 
-/* --- Animationen --- */
-
-/* Allgemeine Fade-In-Animation */
+/* --- Allgemeine Fade-In-Animationen (wie gehabt) --- */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -191,7 +232,7 @@ footer p {
 .fade-in-delay {
     animation: fadeIn 1s ease-out forwards;
     animation-delay: 0.5s;
-    opacity: 0; /* Versteckt das Element, bevor die Animation startet */
+    opacity: 0;
 }
 
 .fade-in-delay-more {
@@ -228,7 +269,7 @@ footer p {
     .container {
         margin: 10px auto;
         padding: 20px 15px;
-        border-radius: 0; /* Auf sehr kleinen Bildschirmen Ränder entfernen */
+        border-radius: 0;
         box-shadow: none;
     }
 
@@ -255,5 +296,9 @@ footer p {
     .rsvp-button {
         padding: 12px 25px;
         font-size: 1.1em;
+    }
+
+    .intro-text {
+        font-size: 2.5em; /* Anpassung für kleine Bildschirme */
     }
 }
