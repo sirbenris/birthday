@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const introOverlay = document.querySelector('.intro-overlay');
+    const carouselWrapper = document.querySelector('.carousel-wrapper');
     const cardContainer = document.querySelector('.card-container');
     const cards = document.querySelectorAll('.card');
     const rsvpButton = document.querySelector('.rsvp-button');
     const scrollIndicator = document.querySelector('.scroll-indicator');
 
-    // Schritt 1: Intro-Animation
-    // Dauer des Intro-Textes "Bald ist es soweit..."
-    const introDuration = 2000; // 2 Sekunden
+    let currentCardIndex = 0;
+    const cardAnimationDelay = 700; // Verzögerung zwischen den Kartenanimationen in ms
+    const cardTransitionDuration = 700; // Dauer der CSS-Transition der Karte in ms
+
+    // --- Intro-Animation ---
+    const introDuration = 2000; // 2 Sekunden für "Bald ist es soweit..."
 
     setTimeout(() => {
         if (introOverlay) {
@@ -15,50 +19,51 @@ document.addEventListener('DOMContentLoaded', () => {
             introOverlay.style.visibility = 'hidden';
         }
 
-        // Schritt 2: Haupt-Container einblenden (als Basis für die Karten)
-        if (cardContainer) {
-            cardContainer.style.opacity = '1';
-            cardContainer.style.transform = 'translateY(0)';
+        // --- Schritt 1: Carousel Wrapper einblenden ---
+        if (carouselWrapper) {
+            carouselWrapper.style.opacity = '1';
+            carouselWrapper.style.transform = 'translateY(0)';
 
-            // Schritt 3: Karten nacheinander einblenden
-            // Wir müssen overflow-y für den Body temporär auf hidden setzen,
-            // um zu verhindern, dass die Seite während der Karten-Animation scrollt
-            document.body.style.overflowY = 'hidden';
-
-            cards.forEach((card, index) => {
-                // Jede Karte mit einer Verzögerung einblenden
-                const delay = index * 400; // 0.4 Sekunden Verzögerung pro Karte
-                setTimeout(() => {
-                    card.classList.add('show');
-                }, delay);
-            });
-
-            // Schritt 4: Scrollen aktivieren, nachdem alle Karten sichtbar sind
-            // und den Scroll-Indikator einblenden
-            const totalAnimationTime = (cards.length - 1) * 400 + 700; // Letzte Kartenverzögerung + deren Transition
-            setTimeout(() => {
-                document.body.style.overflowY = 'auto'; // Scrollen erlauben
-                if (scrollIndicator) {
-                     scrollIndicator.style.opacity = '1';
-                     scrollIndicator.style.visibility = 'visible';
-                }
-            }, totalAnimationTime + 500); // Zusätzliche kleine Verzögerung nach der letzten Karte
+            // --- Schritt 2: Karten sequenziell einblenden ---
+            // Zuerst die erste Karte sofort anzeigen, ohne Verzögerung
+            if (cards.length > 0) {
+                showNextCard();
+            }
         }
     }, introDuration);
 
+    function showNextCard() {
+        if (currentCardIndex < cards.length) {
+            const cardToShow = cards[currentCardIndex];
+            cardToShow.classList.add('show'); // CSS-Klasse für die Animation hinzufügen
 
-    // RSVP-Button Animation beim Laden und Klicken (wie zuvor)
+            // Nach der Animation der aktuellen Karte, die nächste vorbereiten oder Karussell aktivieren
+            setTimeout(() => {
+                currentCardIndex++;
+                if (currentCardIndex < cards.length) {
+                    // Nächste Karte nach Verzögerung anzeigen
+                    setTimeout(showNextCard, cardAnimationDelay);
+                } else {
+                    // --- Schritt 3: Horizontales Scrollen aktivieren ---
+                    // Dies ist der Punkt, an dem alle Karten eingeblendet sind
+                    cardContainer.style.overflowX = 'scroll'; // Horizontales Scrollen erlauben
+                    cardContainer.style.scrollSnapType = 'x mandatory'; // Scroll-Snap aktivieren
+                    
+                    // --- Scroll-Indikator einblenden ---
+                    if (scrollIndicator) {
+                        scrollIndicator.style.opacity = '1';
+                        scrollIndicator.style.visibility = 'visible';
+                    }
+                }
+            }, cardTransitionDuration); // Warte, bis die aktuelle Karte fertig animiert ist
+        }
+    }
+
+    // --- RSVP-Button Animation beim Laden und Klicken ---
     if (rsvpButton) {
-        // Optionale kleine Animation beim Laden, um Aufmerksamkeit zu erregen
-        // Diese wird ausgeführt, sobald der Button selbst sichtbar wird (durch die Karten-Animation)
-        rsvpButton.style.transition = 'none';
-        rsvpButton.style.transform = 'scale(1.02)';
-        setTimeout(() => {
-            rsvpButton.style.transition = 'transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease';
-            rsvpButton.style.transform = 'scale(1)';
-        }, 100);
-
-        // Fügt bei Klick eine kurze visuelle Rückmeldung hinzu
+        // Die initiale Pop-Animation, sobald der Button sichtbar ist (Teil der Karten-Animation)
+        // Man könnte hier einen IntersectionObserver verwenden, um es präziser zu timen,
+        // aber für dieses Setup ist es meist ausreichend, es einfach kurz nach dem Laden der Karte zu triggern.
         rsvpButton.addEventListener('click', (event) => {
             if ('vibrate' in navigator) {
                 navigator.vibrate(50);
@@ -69,8 +74,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
         });
     }
-
-    // Für die Einblendung der Karten selbst nutzen wir die CSS-Animationen
-    // Die `.fade-in-card` Klasse hat bereits die `transition` Eigenschaften.
-    // Die JavaScript-Logik fügt nur die `show` Klasse hinzu.
 });
