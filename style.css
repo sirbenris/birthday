@@ -19,7 +19,7 @@ body {
     align-items: center; /* Zentriert den Inhalt vertikal */
     min-height: 100vh;
     box-sizing: border-box;
-    overflow: hidden; /* Standardmäßig scrollen verhindern, wird per JS aktiviert */
+    overflow: hidden; /* Verhindert jegliches Scrollen, bis JS es freigibt */
 }
 
 /* Intro Overlay */
@@ -54,46 +54,44 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Carousel Wrapper - Dieser umschließt den sichtbaren Bereich */
-.carousel-wrapper {
+/* Wrapper für die zentrierte Kartenansicht während der Animation */
+.centered-card-wrapper {
     position: relative;
     width: 100%;
     height: 100vh; /* Nimmt die gesamte Höhe ein */
-    overflow: hidden; /* Scrollen des Wrappers verhindern */
+    overflow: hidden; /* Wichtig, um Scrollen zu verhindern */
     display: flex;
-    justify-content: flex-start; /* Karten links ausrichten, werden durch JS verschoben */
-    align-items: center;
+    justify-content: center; /* Zentriert den Container */
+    align-items: center; /* Zentriert den Container vertikal */
     opacity: 0; /* Anfangs unsichtbar */
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* Card Container - Enthält alle Karten und ist scrollbar */
+/* Card Container - Enthält alle Karten */
 .card-container {
     display: flex; /* Karten nebeneinander */
     height: 100%; /* Nimmt die Höhe des Wrappers ein */
-    padding: 0 50px; /* Polsterung an den Seiten, damit die Karte zentriert ist */
+    padding: 0 25px; /* Polsterung an den Seiten */
     box-sizing: border-box;
     scroll-snap-type: x mandatory; /* Karten rasten beim Scrollen ein */
     -webkit-overflow-scrolling: touch; /* Verbesserter Scroll auf iOS */
-    overflow-x: hidden; /* Zuerst versteckt, wird per JS aktiviert */
+    overflow-x: hidden; /* Anfangs versteckt, wird per JS aktiviert */
     overflow-y: hidden; /* Kein vertikales Scrollen */
-    position: absolute; /* Für genaue Positionierung */
-    left: 50%; /* Zentriert den Startpunkt */
-    transform: translateX(-50%); /* Korrigiert die Zentrierung */
-    transition: transform 0.5s ease-out; /* Für sanftes Verschieben per JS */
+    width: 100%; /* Volle Breite */
+    align-items: center; /* Karten vertikal zentrieren */
 }
 
 /* Einzelne Karte */
 .card {
     flex-shrink: 0; /* Verhindert, dass Karten schrumpfen */
-    width: calc(100vw - 100px); /* Kartenbreite: Viewport-Breite - 100px Polsterung */
+    width: calc(100vw - 50px); /* Kartenbreite: Viewport-Breite - 50px Polsterung */
     max-width: 400px; /* Maximale Breite einer Karte */
     height: 80vh; /* Höhe der Karte, damit sie gut in den Viewport passt */
     background-color: var(--card-background);
     border-radius: 12px;
     box-shadow: 0 8px 25px var(--card-shadow);
-    margin: auto 25px; /* Abstand zwischen den Karten + Zentrierung */
+    margin: auto 15px; /* Abstand zwischen den Karten */
     padding: 30px 20px;
     box-sizing: border-box;
     display: flex;
@@ -102,6 +100,7 @@ body {
     align-items: center; /* Inhalt horizontal zentrieren */
     text-align: center;
     scroll-snap-align: center; /* Karte rastet in der Mitte ein */
+    position: absolute; /* Für Überlappung während der Einblendung */
     opacity: 0; /* Anfangs unsichtbar */
     transform: scale(0.8) translateY(20px); /* Startposition für Animation */
     transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.7s ease-out; /* Federnder Effekt */
@@ -111,6 +110,7 @@ body {
 .card.show {
     opacity: 1;
     transform: scale(1) translateY(0);
+    position: static; /* Setze auf static nach dem Einblenden, um Flow wiederherzustellen */
 }
 
 /* Inhalte der Karten */
@@ -258,7 +258,7 @@ header h2 {
 @media (max-width: 480px) {
     .card {
         width: calc(100vw - 60px); /* Kartenbreite für sehr kleine Bildschirme */
-        margin: auto 15px; /* Kleinerer Rand zwischen Karten */
+        margin: auto 10px; /* Kleinerer Rand zwischen Karten */
         padding: 25px 15px;
     }
     header h1 {
@@ -279,8 +279,5 @@ header h2 {
     }
     .intro-text {
         font-size: 2.2em;
-    }
-    .carousel-wrapper {
-        padding: 0; /* Keine zusätzliche Polsterung auf sehr kleinen Screens */
     }
 }
