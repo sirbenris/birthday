@@ -1,26 +1,26 @@
 :root {
-    --primary-color: #9EC8B9; /* Helles Grün/Türkis für Akzente */
-    --secondary-color: #5C8374; /* Dunkleres Grün für Rahmen/Linien */
-    --accent-color: #FF7F50; /* Korallenrot für den Button, passend zu BBQ */
-    --text-color-light: #f8f8f8; /* Helle Schriftfarbe (fast weiß) */
-    --background-dark: #121212; /* Noch dunklerer Hintergrund */
-    --card-background: #1e1e1e; /* Sehr dunkles Grau für Info-Boxen */
-    --element-shadow: rgba(0, 0, 0, 0.7); /* Stärkerer Schatten auf dunklem HG */
+    --bg-dark: #202020; /* Haupt-Hintergrundfarbe aus dem Bild */
+    --text-light: #f0f0f0; /* Helle Schrift für Überschriften/wichtige Texte */
+    --text-medium: #a0a0a0; /* Mittleres Grau für normalen Text (ähnlich dem Datum im Bild) */
+    --accent-blue: #007bff; /* Ein Akzentblau, falls benötigt (nicht direkt im Bild, aber gängig) */
+    --accent-green: #28a745; /* Ein Akzentgrün für Erfolgsmeldungen/Bestätigungen */
+    --accent-orange: #ff7f50; /* Korallenrot/Orange für BBQ-Button wie zuvor */
+    --line-color: #383838; /* Dunklere Linie für Trenner (ähnlich dem Graphen) */
 }
 
 body {
     font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--background-dark);
-    color: var(--text-color-light); /* Helle Schriftfarbe */
+    background-color: var(--bg-dark); /* Dunkler Hintergrund */
+    color: var(--text-medium); /* Standard-Textfarbe */
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-start; /* Start am oberen Rand, ermöglicht natürliches Scrollen */
     min-height: 100vh;
     box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: hidden; /* Wird per JS aktiviert */
+    overflow-x: hidden; /* Horizontales Scrollen verhindern */
+    overflow-y: hidden; /* Vertikales Scrollen verhindern, wird per JS aktiviert */
     position: relative;
 }
 
@@ -31,7 +31,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--background-dark);
+    background-color: var(--bg-dark);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +44,7 @@ body {
 .intro-text {
     font-family: 'Playfair Display', serif;
     font-size: 2.5em;
-    color: var(--primary-color);
+    color: var(--text-light); /* Helle Schrift für den Intro-Text */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInIntroText 1.5s ease-out forwards;
@@ -66,9 +66,9 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    opacity: 0;
+    align-items: center; /* Zentriert die Abschnitte */
+    gap: 40px; /* Mehr Abstand zwischen den Abschnitten für den "clean"-Look */
+    opacity: 0; /* Anfangs unsichtbar */
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
@@ -76,14 +76,19 @@ body {
 /* Einzelne Sektionen (die "fliegenden" Elemente) */
 .section {
     width: 100%;
-    background-color: var(--card-background); /* Sehr dunkles Grau für Boxen */
-    border-radius: 12px;
-    box-shadow: 0 4px 15px var(--element-shadow);
-    padding: 25px 20px;
+    /* Hintergrund und Schatten entfernt für den "Kartenstil" */
+    padding: 15px 0; /* Nur vertikales Padding, kein horizontaler Rahmen */
     text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    opacity: 0; /* Anfangs unsichtbar */
+    transform: translateY(30px); /* Startposition für Einflug */
+    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Federnder Effekt */
+    border-bottom: 1px solid var(--line-color); /* Dezente Trennlinie zwischen Sektionen */
+}
+
+/* Die letzte Sektion soll keine Linie unten haben */
+.footer-section {
+    border-bottom: none;
+    margin-top: 20px; /* Etwas mehr Abstand zum Footer */
 }
 
 .section.show {
@@ -94,7 +99,7 @@ body {
 h1 {
     font-family: 'Playfair Display', serif;
     font-size: 2.8em;
-    color: var(--primary-color);
+    color: var(--text-light); /* Helle Schriftfarbe für Hauptüberschrift */
     margin-bottom: 10px;
     font-weight: 700;
 }
@@ -102,14 +107,14 @@ h1 {
 h2 {
     font-family: 'Raleway', sans-serif;
     font-size: 1.5em;
-    color: var(--text-color-light);
+    color: var(--text-light); /* Helle Schriftfarbe für Unterüberschriften */
     font-weight: 400;
     margin-top: 0;
 }
 
 h3 {
     font-family: 'Playfair Display', serif;
-    color: var(--primary-color);
+    color: var(--text-light); /* Helle Schriftfarbe für Sektionsüberschriften */
     font-size: 1.6em;
     margin-top: 0;
     margin-bottom: 10px;
@@ -119,28 +124,28 @@ p {
     font-size: 1.1em;
     line-height: 1.6;
     margin-bottom: 5px;
-    color: var(--text-color-light); /* Helle Schriftfarbe */
+    color: var(--text-medium); /* Mittleres Grau für normalen Fließtext */
 }
 
 .map-link {
-    color: var(--accent-color);
+    color: var(--accent-orange); /* Orange für Links */
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .map-link:hover {
-    color: var(--primary-color);
+    color: var(--text-light); /* Heller bei Hover */
 }
 
 /* RSVP Buttons */
 .rsvp-section .rsvp-button {
-    display: block;
-    width: calc(100% - 40px);
-    max-width: 300px;
-    margin: 15px auto;
-    background-color: var(--accent-color);
-    color: #fff; /* Button-Text ist weiß, da Buttonfarbe dunkel */
+    display: block; /* Buttons untereinander */
+    width: calc(100% - 40px); /* Angepasste Breite wegen Padding */
+    max-width: 300px; /* Maximale Breite */
+    margin: 15px auto; /* Abstand zwischen Buttons und zentriert */
+    background-color: var(--accent-orange); /* Orange Button */
+    color: var(--text-light); /* Button-Text hell */
     padding: 15px 20px;
     border-radius: 50px;
     text-decoration: none;
@@ -148,35 +153,35 @@ p {
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Dezenter Schatten */
 }
 
 .rsvp-section .rsvp-button:hover {
-    background-color: #e66a3d;
+    background-color: #e66a3d; /* Dunklerer Ton beim Hover */
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(255, 127, 80, 0.4);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
 .rsvp-section .rsvp-button.clicked {
     transform: scale(0.95);
-    box-shadow: 0 2px 5px rgba(255, 127, 80, 0.4);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 .contact-info {
     margin-top: 25px;
     font-size: 1em;
-    color: var(--text-color-light); /* Helle Schriftfarbe */
+    color: var(--text-medium); /* Mittleres Grau */
 }
 
 .contact-info a {
-    color: var(--primary-color);
+    color: var(--accent-orange); /* Orange für Kontaktlink */
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .contact-info a:hover {
-    color: var(--accent-color);
+    color: var(--text-light);
 }
 
 /* Responsive Anpassungen */
@@ -191,7 +196,7 @@ p {
         font-size: 1.4em;
     }
     .section {
-        padding: 20px 15px;
+        padding: 15px 10px; /* Weniger Padding auf kleinen Bildschirmen */
         margin: 0 10px;
     }
     .rsvp-section .rsvp-button {
