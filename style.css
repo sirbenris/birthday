@@ -1,85 +1,78 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     color: #FFFFFF; /* Weiße Schrift */
     background-color: #000000; /* Schwarzer Hintergrund */
-    /* overflow-x: hidden; Verhindert horizontales Scrollen - kann jetzt entfernt werden, da JS overflow handhabt */
-    display: flex; /* Für die Zentrierung des aktuellen Abschnitts */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* Mindestens die volle Höhe des Viewports */
-    transition: background-color 0.5s ease-in-out; /* Optional: Übergang für Hintergrundfarbe */
+    overflow-x: hidden; /* Verhindert horizontales Scrollen */
+    line-height: 1.6;
+    padding-bottom: 50px; /* Platz am Ende für Scrollen */
 }
 
-/* Stile für die Intro-Abschnitte */
-.intro-section {
-    display: flex; /* Wichtig für vertikale und horizontale Zentrierung */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* Jeder Intro-Abschnitt nimmt die volle Bildschirmhöhe ein */
-    width: 100%;
-    text-align: center;
-    opacity: 0; /* Standardmäßig unsichtbar */
-    transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
-    /* position: absolute; */ /* DIESE ZEILE ENTFERNEN */
-    /* top: 0; */ /* DIESE ZEILE ENTFERNEN */
-    /* left: 0; */ /* DIESE ZEILE ENTFERNEN */
+.content-wrapper {
+    max-width: 700px; /* Maximale Breite für Lesbarkeit */
+    margin: 0 auto; /* Zentriert den Inhalt */
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center; /* Zentriert Texte im Wrapper */
 }
 
-/* Die 'visible' Klasse wird jetzt nur für die Opacity-Transition genutzt */
-/* Da die Sektionen dynamisch hinzugefügt und entfernt werden, ist .visible nicht mehr strikt notwendig */
-/* Aber die Transition bleibt für das Einblenden der neu hinzugefügten Sektion */
-.intro-section[style*="opacity: 1"] { /* Nutze Attribut-Selektor für das JavaScript-gesteuerte Einblenden */
-    opacity: 1;
-}
-
-
-.intro-section h1 {
-    font-size: 2.5em;
+h1 {
+    font-size: 3em;
+    color: #FFD700; /* Goldene Farbe */
+    margin-top: 50px;
     margin-bottom: 20px;
 }
 
-.intro-section h2 {
+h2 {
+    font-size: 2.5em;
+    color: #FFD700;
+    margin-bottom: 30px;
+}
+
+h3 {
     font-size: 2em;
+    color: #FFD700;
+    margin-top: 40px;
     margin-bottom: 15px;
 }
 
-.intro-section p {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-}
-
-/* Stile für den finalen Scroll-Bereich */
-.full-info-section {
-    background-color: #1a1a1a; /* Dunklerer Grauton für den scrollbaren Bereich */
-    padding: 40px 20px;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 600px; /* Maximale Breite für bessere Lesbarkeit */
-    margin-top: 50px; /* Abstand nach den Intro-Animationen */
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    line-height: 1.6;
-    opacity: 0; /* Standardmäßig unsichtbar */
-    transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
-    min-height: auto; /* Wichtig: Hier keine feste Höhe, damit es scrollbar wird */
-}
-
-.full-info-section.visible {
-    opacity: 1;
-}
-
-.full-info-section h2,
-.full-info-section h3 {
-    color: #FFD700; /* Goldene Farbe für Überschriften */
+h4 {
+    font-size: 1.5em;
+    color: #FFD700;
     margin-top: 25px;
     margin-bottom: 10px;
 }
 
-.full-info-section p {
+p {
+    font-size: 1.2em;
     margin-bottom: 15px;
+}
+
+/* Stil für die animierten Elemente */
+.animated-item {
+    opacity: 0; /* Standardmäßig unsichtbar */
+    transform: translateY(20px); /* Leicht nach unten verschoben */
+    transition: opacity 1s ease-out, transform 1s ease-out; /* Sanfter Übergang */
+    will-change: opacity, transform; /* Performance-Optimierung für Animationen */
+}
+
+/* Wenn das Element sichtbar wird */
+.animated-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.full-info-section {
+    background-color: #1a1a1a; /* Dunklerer Grauton für den Infobereich */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin-top: 50px;
+    text-align: left; /* Text im Infobereich linksbündig */
+}
+
+.full-info-section p {
+    font-size: 1em; /* Kleinere Schriftgröße im Detailbereich */
 }
 
 .whatsapp-button {
@@ -91,7 +84,7 @@ body {
     text-decoration: none;
     font-size: 1.1em;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 25px;
     transition: background-color 0.3s ease;
 }
 
@@ -106,7 +99,7 @@ body {
 }
 
 .map-link {
-    color: #87CEEB; /* Helle Blau für Links */
+    color: #87CEEB; /* Helles Blau für Links */
     text-decoration: none;
     font-weight: bold;
 }
@@ -115,22 +108,25 @@ body {
     text-decoration: underline;
 }
 
-/* Die Klasse hidden wird im neuen JS nicht mehr benötigt, da Elemente entfernt werden */
-/* .hidden { display: none; } */
-
-/* MEDIA QUERIES für kleinere Bildschirme (optional, aber empfohlen) */
-@media (max-width: 768px) {
-    .intro-section h1 {
+/* Responsive Anpassungen */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
         font-size: 2em;
     }
-    .intro-section h2 {
+    h3 {
         font-size: 1.8em;
     }
-    .intro-section p {
+    h4 {
+        font-size: 1.3em;
+    }
+    p {
         font-size: 1em;
     }
     .full-info-section {
-        padding: 30px 15px;
+        padding: 20px;
     }
     .whatsapp-button {
         padding: 12px 20px;
