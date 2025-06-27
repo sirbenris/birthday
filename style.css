@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #9EC8B9; /* Helles Grün für Überschriften/Akzente */
-    --secondary-color: #5C8374; /* Dunkleres Grün für Rahmen */
+    --primary-color: #9EC8B9; /* Helles Grün/Türkis für Akzente */
+    --secondary-color: #5C8374; /* Dunkleres Grün für Rahmen/Linien */
     --accent-color: #FF7F50; /* Korallenrot für den Button, passend zu BBQ */
     --text-color-light: #f8f8f8; /* Helle Schriftfarbe */
     --background-dark: #1A1A1A; /* Sehr dunkler Hintergrund */
-    --card-background: #2C2C2C; /* Etwas helleres Grau für Karten */
-    --card-shadow: rgba(0, 0, 0, 0.4);
+    --card-background: #2C2C2C; /* Etwas helleres Grau für detail-items */
+    --element-shadow: rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -16,10 +16,12 @@ body {
     color: var(--text-color-light);
     display: flex;
     justify-content: center;
-    align-items: center; /* Zentriert den Inhalt vertikal */
+    align-items: flex-start; /* Start am oberen Rand, ermöglicht natürliches Scrollen */
     min-height: 100vh;
     box-sizing: border-box;
-    overflow: hidden; /* Verhindert jegliches Scrollen, bis JS es freigibt */
+    overflow-x: hidden; /* Horizontales Scrollen verhindern */
+    overflow-y: hidden; /* Vertikales Scrollen verhindern, wird per JS aktiviert */
+    position: relative; /* Für die Flammenpositionierung */
 }
 
 /* Intro Overlay */
@@ -41,11 +43,13 @@ body {
 
 .intro-text {
     font-family: 'Playfair Display', serif;
-    font-size: 3em;
+    font-size: 2.5em; /* Etwas kleiner für besseren Lesbarkeit */
     color: var(--primary-color);
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInIntroText 1.5s ease-out forwards;
+    text-align: center;
+    padding: 0 20px;
 }
 
 @keyframes fadeInIntroText {
@@ -54,100 +58,96 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Wrapper für die zentrierte Kartenansicht während der Animation */
-.centered-card-wrapper {
-    position: relative;
+/* Flammen-Effekt (Beispielhafte Umsetzung - du brauchst PNGs/SVGs von Flammen) */
+/* Dies sind Platzhalter. Im echten Einsatz bräuchtest du 
+   Bilder von Flammen (z.B. PNG mit Transparenz) */
+.flame-effect-left,
+.flame-effect-right {
+    position: fixed;
+    bottom: 0;
+    width: 150px; /* Breite der Flamme */
+    height: 250px; /* Höhe der Flamme */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="flameGradient" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23FFD700"/><stop offset="50%" stop-color="%23FF8C00"/><stop offset="100%" stop-color="%23FF4500" /></linearGradient></defs><path fill="url(%23flameGradient)" d="M50,0 Q80,40 70,80 C60,110 50,150 50,150 Q40,110 30,80 C20,40 50,0z" /></svg>'); /* Beispiel SVG Flamme */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: -1; /* Hinter dem Inhalt */
+    opacity: 0.2; /* Subtil */
+    animation: pulseFlame 3s infinite ease-in-out alternate;
+}
+
+.flame-effect-left {
+    left: -50px; /* Position am linken Rand */
+    transform: scaleX(-1); /* Spiegeln für die linke Seite */
+}
+
+.flame-effect-right {
+    right: -50px; /* Position am rechten Rand */
+}
+
+@keyframes pulseFlame {
+    0% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.02); }
+    100% { opacity: 0.2; transform: scale(1); }
+}
+
+/* Content Wrapper für alle Informationen */
+.content-wrapper {
     width: 100%;
-    height: 100vh; /* Nimmt die gesamte Höhe ein */
-    overflow: hidden; /* Wichtig, um Scrollen zu verhindern */
+    max-width: 600px; /* Begrenzung der Breite */
+    padding: 20px;
+    box-sizing: border-box;
     display: flex;
-    justify-content: center; /* Zentriert den Container */
-    align-items: center; /* Zentriert den Container vertikal */
+    flex-direction: column;
+    align-items: center; /* Zentriert die Abschnitte */
+    gap: 30px; /* Abstand zwischen den Abschnitten */
     opacity: 0; /* Anfangs unsichtbar */
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* Card Container - Enthält alle Karten */
-.card-container {
-    display: flex; /* Karten nebeneinander */
-    height: 100%; /* Nimmt die Höhe des Wrappers ein */
-    padding: 0 25px; /* Polsterung an den Seiten */
-    box-sizing: border-box;
-    scroll-snap-type: x mandatory; /* Karten rasten beim Scrollen ein */
-    -webkit-overflow-scrolling: touch; /* Verbesserter Scroll auf iOS */
-    overflow-x: hidden; /* Anfangs versteckt, wird per JS aktiviert */
-    overflow-y: hidden; /* Kein vertikales Scrollen */
-    width: 100%; /* Volle Breite */
-    align-items: center; /* Karten vertikal zentrieren */
-}
-
-/* Einzelne Karte */
-.card {
-    flex-shrink: 0; /* Verhindert, dass Karten schrumpfen */
-    width: calc(100vw - 50px); /* Kartenbreite: Viewport-Breite - 50px Polsterung */
-    max-width: 400px; /* Maximale Breite einer Karte */
-    height: 80vh; /* Höhe der Karte, damit sie gut in den Viewport passt */
-    background-color: var(--card-background);
+/* Einzelne Sektionen (die "fliegenden" Elemente) */
+.section {
+    width: 100%;
+    background-color: var(--card-background); /* Dunklere Box für Infos */
     border-radius: 12px;
-    box-shadow: 0 8px 25px var(--card-shadow);
-    margin: auto 15px; /* Abstand zwischen den Karten */
-    padding: 30px 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Inhalt vertikal zentrieren */
-    align-items: center; /* Inhalt horizontal zentrieren */
+    box-shadow: 0 4px 15px var(--element-shadow);
+    padding: 25px 20px;
     text-align: center;
-    scroll-snap-align: center; /* Karte rastet in der Mitte ein */
-    position: absolute; /* Für Überlappung während der Einblendung */
     opacity: 0; /* Anfangs unsichtbar */
-    transform: scale(0.8) translateY(20px); /* Startposition für Animation */
-    transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.7s ease-out; /* Federnder Effekt */
+    transform: translateY(30px); /* Startposition für Einflug */
+    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Federnder Effekt */
 }
 
-/* Zustand der Karte, wenn sie sichtbar ist */
-.card.show {
+.section.show {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    position: static; /* Setze auf static nach dem Einblenden, um Flow wiederherzustellen */
+    transform: translateY(0);
 }
 
-/* Inhalte der Karten */
-header h1 {
+h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5em;
+    font-size: 2.8em;
     color: var(--primary-color);
     margin-bottom: 10px;
     font-weight: 700;
 }
 
-header h2 {
+h2 {
     font-family: 'Raleway', sans-serif;
-    font-size: 1.3em;
+    font-size: 1.5em;
     color: var(--text-color-light);
     font-weight: 400;
     margin-top: 0;
 }
 
-.card-content {
-    flex-grow: 1; /* Inhalt nimmt verfügbaren Platz ein */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.card-content h3 {
+h3 {
     font-family: 'Playfair Display', serif;
     color: var(--primary-color);
-    font-size: 1.8em;
+    font-size: 1.6em;
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.card-content p {
+p {
     font-size: 1.1em;
     line-height: 1.6;
     margin-bottom: 5px;
@@ -165,25 +165,33 @@ header h2 {
     color: var(--primary-color);
 }
 
-.rsvp-button {
-    display: inline-block;
+/* RSVP Buttons */
+.rsvp-section .rsvp-button {
+    display: block; /* Buttons untereinander */
+    width: calc(100% - 40px); /* Angepasste Breite wegen Padding */
+    max-width: 300px; /* Maximale Breite */
+    margin: 15px auto; /* Abstand zwischen Buttons und zentriert */
     background-color: var(--accent-color);
     color: #fff;
-    padding: 15px 30px;
+    padding: 15px 20px;
     border-radius: 50px;
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
-    margin-top: 20px; /* Abstand zum oberen Text */
 }
 
-.rsvp-button:hover {
+.rsvp-section .rsvp-button:hover {
     background-color: #e66a3d;
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(255, 127, 80, 0.4);
+}
+
+.rsvp-section .rsvp-button.clicked {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(255, 127, 80, 0.4);
 }
 
 .contact-info {
@@ -203,81 +211,26 @@ header h2 {
     color: var(--accent-color);
 }
 
-/* Scroll Indikator */
-.scroll-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--primary-color);
-    font-size: 0.9em;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-    z-index: 100;
-}
-
-.scroll-indicator p {
-    margin-bottom: 5px;
-}
-
-.arrow-right {
-    width: 0;
-    height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 12px solid var(--primary-color);
-    margin: 0 auto;
-    animation: bounceRight 1.5s infinite;
-}
-
-/* Keyframes für Scroll-Indikator */
-@keyframes fadeInScrollIndicator {
-    from { opacity: 0; visibility: hidden; }
-    to { opacity: 1; visibility: visible; }
-}
-
-@keyframes bounceRight {
-    0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
-    40% { transform: translateX(5px); }
-    60% { transform: translateX(3px); }
-}
-
-/* Button Pulse Animation */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-}
-
-.animate-button {
-    animation: pulse 2s infinite ease-in-out;
-}
-
 /* Responsive Anpassungen */
 @media (max-width: 480px) {
-    .card {
-        width: calc(100vw - 60px); /* Kartenbreite für sehr kleine Bildschirme */
-        margin: auto 10px; /* Kleinerer Rand zwischen Karten */
-        padding: 25px 15px;
+    h1 {
+        font-size: 2.2em;
     }
-    header h1 {
-        font-size: 2em;
+    h2 {
+        font-size: 1.2em;
     }
-    header h2 {
-        font-size: 1.1em;
+    h3 {
+        font-size: 1.4em;
     }
-    .card-content h3 {
-        font-size: 1.6em;
+    .section {
+        padding: 20px 15px;
+        margin: 0 10px; /* Rand zur Seite */
     }
-    .card-content p {
+    .rsvp-section .rsvp-button {
         font-size: 1em;
-    }
-    .rsvp-button {
-        padding: 12px 25px;
-        font-size: 1.1em;
+        padding: 12px 15px;
     }
     .intro-text {
-        font-size: 2.2em;
+        font-size: 2em;
     }
 }
