@@ -3,34 +3,38 @@ body {
     font-family: Arial, sans-serif;
     color: #FFFFFF; /* Weiße Schrift */
     background-color: #000000; /* Schwarzer Hintergrund */
-    overflow-x: hidden; /* Verhindert horizontales Scrollen */
-    display: flex;
+    /* overflow-x: hidden; Verhindert horizontales Scrollen - kann jetzt entfernt werden, da JS overflow handhabt */
+    display: flex; /* Für die Zentrierung des aktuellen Abschnitts */
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh; /* Mindestens die volle Höhe des Viewports */
+    transition: background-color 0.5s ease-in-out; /* Optional: Übergang für Hintergrundfarbe */
 }
 
 /* Stile für die Intro-Abschnitte */
 .intro-section {
-    display: flex;
+    display: flex; /* Wichtig für vertikale und horizontale Zentrierung */
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh; /* Jeder Intro-Abschnitt nimmt die volle Bildschirmhöhe ein */
+    width: 100%;
     text-align: center;
     opacity: 0; /* Standardmäßig unsichtbar */
     transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
-    position: absolute; /* Positioniert sie übereinander */
-    width: 100%;
-    top: 0;
-    left: 0;
+    /* position: absolute; */ /* DIESE ZEILE ENTFERNEN */
+    /* top: 0; */ /* DIESE ZEILE ENTFERNEN */
+    /* left: 0; */ /* DIESE ZEILE ENTFERNEN */
 }
 
-.intro-section.visible {
-    opacity: 1; /* Sichtbar, wenn die Klasse 'visible' hinzugefügt wird */
-    position: relative; /* Nimmt wieder Platz im Flow ein, sobald sichtbar */
+/* Die 'visible' Klasse wird jetzt nur für die Opacity-Transition genutzt */
+/* Da die Sektionen dynamisch hinzugefügt und entfernt werden, ist .visible nicht mehr strikt notwendig */
+/* Aber die Transition bleibt für das Einblenden der neu hinzugefügten Sektion */
+.intro-section[style*="opacity: 1"] { /* Nutze Attribut-Selektor für das JavaScript-gesteuerte Einblenden */
+    opacity: 1;
 }
+
 
 .intro-section h1 {
     font-size: 2.5em;
@@ -60,6 +64,7 @@ body {
     line-height: 1.6;
     opacity: 0; /* Standardmäßig unsichtbar */
     transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
+    min-height: auto; /* Wichtig: Hier keine feste Höhe, damit es scrollbar wird */
 }
 
 .full-info-section.visible {
@@ -110,7 +115,25 @@ body {
     text-decoration: underline;
 }
 
-/* Versteckt, bis JavaScript sie einblendet */
-.hidden {
-    display: none;
+/* Die Klasse hidden wird im neuen JS nicht mehr benötigt, da Elemente entfernt werden */
+/* .hidden { display: none; } */
+
+/* MEDIA QUERIES für kleinere Bildschirme (optional, aber empfohlen) */
+@media (max-width: 768px) {
+    .intro-section h1 {
+        font-size: 2em;
+    }
+    .intro-section h2 {
+        font-size: 1.8em;
+    }
+    .intro-section p {
+        font-size: 1em;
+    }
+    .full-info-section {
+        padding: 30px 15px;
+    }
+    .whatsapp-button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
 }
