@@ -2,10 +2,10 @@
     --primary-color: #9EC8B9; /* Helles Grün/Türkis für Akzente */
     --secondary-color: #5C8374; /* Dunkleres Grün für Rahmen/Linien */
     --accent-color: #FF7F50; /* Korallenrot für den Button, passend zu BBQ */
-    --text-color-light: #f8f8f8; /* Helle Schriftfarbe */
-    --background-dark: #1A1A1A; /* Sehr dunkler Hintergrund */
-    --card-background: #2C2C2C; /* Etwas helleres Grau für detail-items */
-    --element-shadow: rgba(0, 0, 0, 0.4);
+    --text-color-light: #f8f8f8; /* Helle Schriftfarbe (fast weiß) */
+    --background-dark: #121212; /* Noch dunklerer Hintergrund */
+    --card-background: #1e1e1e; /* Sehr dunkles Grau für Info-Boxen */
+    --element-shadow: rgba(0, 0, 0, 0.7); /* Stärkerer Schatten auf dunklem HG */
 }
 
 body {
@@ -13,15 +13,15 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background-dark);
-    color: var(--text-color-light);
+    color: var(--text-color-light); /* Helle Schriftfarbe */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Start am oberen Rand, ermöglicht natürliches Scrollen */
+    align-items: flex-start;
     min-height: 100vh;
     box-sizing: border-box;
-    overflow-x: hidden; /* Horizontales Scrollen verhindern */
-    overflow-y: hidden; /* Vertikales Scrollen verhindern, wird per JS aktiviert */
-    position: relative; /* Für die Flammenpositionierung */
+    overflow-x: hidden;
+    overflow-y: hidden; /* Wird per JS aktiviert */
+    position: relative;
 }
 
 /* Intro Overlay */
@@ -43,7 +43,7 @@ body {
 
 .intro-text {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5em; /* Etwas kleiner für besseren Lesbarkeit */
+    font-size: 2.5em;
     color: var(--primary-color);
     opacity: 0;
     transform: translateY(20px);
@@ -58,49 +58,17 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Flammen-Effekt (Beispielhafte Umsetzung - du brauchst PNGs/SVGs von Flammen) */
-/* Dies sind Platzhalter. Im echten Einsatz bräuchtest du 
-   Bilder von Flammen (z.B. PNG mit Transparenz) */
-.flame-effect-left,
-.flame-effect-right {
-    position: fixed;
-    bottom: 0;
-    width: 150px; /* Breite der Flamme */
-    height: 250px; /* Höhe der Flamme */
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><defs><linearGradient id="flameGradient" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23FFD700"/><stop offset="50%" stop-color="%23FF8C00"/><stop offset="100%" stop-color="%23FF4500" /></linearGradient></defs><path fill="url(%23flameGradient)" d="M50,0 Q80,40 70,80 C60,110 50,150 50,150 Q40,110 30,80 C20,40 50,0z" /></svg>'); /* Beispiel SVG Flamme */
-    background-size: contain;
-    background-repeat: no-repeat;
-    z-index: -1; /* Hinter dem Inhalt */
-    opacity: 0.2; /* Subtil */
-    animation: pulseFlame 3s infinite ease-in-out alternate;
-}
-
-.flame-effect-left {
-    left: -50px; /* Position am linken Rand */
-    transform: scaleX(-1); /* Spiegeln für die linke Seite */
-}
-
-.flame-effect-right {
-    right: -50px; /* Position am rechten Rand */
-}
-
-@keyframes pulseFlame {
-    0% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 0.3; transform: scale(1.02); }
-    100% { opacity: 0.2; transform: scale(1); }
-}
-
 /* Content Wrapper für alle Informationen */
 .content-wrapper {
     width: 100%;
-    max-width: 600px; /* Begrenzung der Breite */
+    max-width: 600px;
     padding: 20px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Zentriert die Abschnitte */
-    gap: 30px; /* Abstand zwischen den Abschnitten */
-    opacity: 0; /* Anfangs unsichtbar */
+    align-items: center;
+    gap: 30px;
+    opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
@@ -108,14 +76,14 @@ body {
 /* Einzelne Sektionen (die "fliegenden" Elemente) */
 .section {
     width: 100%;
-    background-color: var(--card-background); /* Dunklere Box für Infos */
+    background-color: var(--card-background); /* Sehr dunkles Grau für Boxen */
     border-radius: 12px;
     box-shadow: 0 4px 15px var(--element-shadow);
     padding: 25px 20px;
     text-align: center;
-    opacity: 0; /* Anfangs unsichtbar */
-    transform: translateY(30px); /* Startposition für Einflug */
-    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Federnder Effekt */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
 .section.show {
@@ -151,7 +119,7 @@ p {
     font-size: 1.1em;
     line-height: 1.6;
     margin-bottom: 5px;
-    color: var(--text-color-light);
+    color: var(--text-color-light); /* Helle Schriftfarbe */
 }
 
 .map-link {
@@ -167,12 +135,12 @@ p {
 
 /* RSVP Buttons */
 .rsvp-section .rsvp-button {
-    display: block; /* Buttons untereinander */
-    width: calc(100% - 40px); /* Angepasste Breite wegen Padding */
-    max-width: 300px; /* Maximale Breite */
-    margin: 15px auto; /* Abstand zwischen Buttons und zentriert */
+    display: block;
+    width: calc(100% - 40px);
+    max-width: 300px;
+    margin: 15px auto;
     background-color: var(--accent-color);
-    color: #fff;
+    color: #fff; /* Button-Text ist weiß, da Buttonfarbe dunkel */
     padding: 15px 20px;
     border-radius: 50px;
     text-decoration: none;
@@ -197,7 +165,7 @@ p {
 .contact-info {
     margin-top: 25px;
     font-size: 1em;
-    color: var(--text-color-light);
+    color: var(--text-color-light); /* Helle Schriftfarbe */
 }
 
 .contact-info a {
@@ -224,7 +192,7 @@ p {
     }
     .section {
         padding: 20px 15px;
-        margin: 0 10px; /* Rand zur Seite */
+        margin: 0 10px;
     }
     .rsvp-section .rsvp-button {
         font-size: 1em;
