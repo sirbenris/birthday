@@ -12,63 +12,55 @@
 </head>
 <body>
     <div class="intro-overlay">
-        <h1 class="intro-text">Bald ist es soweit...</h1>
+        <h1 class="intro-text">Eine besondere Einladung für dich...</h1>
     </div>
 
-    <div class="centered-card-wrapper">
-        <div class="card-container">
-            <div class="card" id="card-1">
-                <header>
-                    <h1>Du bist eingeladen!</h1>
-                    <h2>Ben feiert seinen 39. Geburtstag</h2>
-                </header>
-            </div>
+    <div class="flame-effect-left"></div>
+    <div class="flame-effect-right"></div>
 
-            <div class="card" id="card-2">
-                <div class="card-content">
-                    <h3>Wann?</h3>
-                    <p>26. Juli 2025</p>
-                    <p>Ab 18:00 Uhr</p>
-                </div>
-            </div>
-
-            <div class="card" id="card-3">
-                <div class="card-content">
-                    <h3>Wo?</h3>
-                    <p>In meinem Garten</p>
-                    <p>Dortmund</p>
-                    <a href="https://www.google.com/maps/search/Dortmund+garden" target="_blank" class="map-link">Auf Karte anzeigen</a>
-                </div>
-            </div>
-
-            <div class="card" id="card-4">
-                <div class="card-content">
-                    <h3>Was?</h3>
-                    <p>Großes BBQ</p>
-                    <p>Für Speisen & Getränke ist gesorgt!</p>
-                </div>
-            </div>
-
-            <div class="card" id="card-5">
-                <div class="card-content">
-                    <h3>Bitte gib mir Bescheid!</h3>
-                    <p>Damit ich besser planen kann, sag mir bitte kurz Bescheid, ob du dabei bist.</p>
-                    <a href="mailto:deine@email.de?subject=RSVP%20Geburtstag%20Ben" class="rsvp-button animate-button">Ich bin dabei!</a>
-                    <p class="contact-info">Oder rufe mich an: <a href="tel:+49123456789">+49 123 456789</a></p>
-                </div>
-            </div>
-
-            <div class="card" id="card-6">
-                <div class="card-content">
-                    <p>Ich freue mich auf einen tollen Abend mit dir!</p>
-                </div>
-            </div>
+    <div class="content-wrapper">
+        <div class="section" id="greeting-section">
+            <h2 id="greeting">Hallo Freund!</h2>
         </div>
-    </div>
 
-    <div class="scroll-indicator">
-        <p>Zur Seite wischen</p>
-        <div class="arrow-right"></div>
+        <div class="section" id="invite-title-section">
+            <h1>Du bist eingeladen!</h1>
+        </div>
+
+        <div class="section" id="birthday-info-section">
+            <h2>Ben feiert seinen 39. Geburtstag</h2>
+        </div>
+
+        <div class="section detail-item" id="date-time-section">
+            <h3>Wann?</h3>
+            <p>26. Juli 2025</p>
+            <p>Ab 18:00 Uhr</p>
+        </div>
+
+        <div class="section detail-item" id="location-section">
+            <h3>Wo?</h3>
+            <p>In meinem Garten</p>
+            <p>Dortmund</p>
+            <a href="https://www.google.com/maps/search/mein+garten+dortmund" target="_blank" class="map-link">Auf Karte anzeigen</a>
+        </div>
+
+        <div class="section detail-item" id="what-section">
+            <h3>Was?</h3>
+            <p>Großes BBQ</p>
+            <p>Für Speisen & Getränke ist gesorgt!</p>
+        </div>
+
+        <div class="section rsvp-section" id="rsvp-section">
+            <h3>Bitte gib mir Bescheid!</h3>
+            <p>Damit ich besser planen kann, sag mir bitte kurz Bescheid, ob du dabei bist.</p>
+            <a href="#" id="whatsapp-yes-button" class="rsvp-button animate-button">Ja, ich bin dabei!</a>
+            <a href="#" id="whatsapp-no-button" class="rsvp-button animate-button">Leider kann ich nicht</a>
+            <p class="contact-info">Oder kontaktiere mich direkt: <a href="tel:+49123456789">+49 123 456789</a></p>
+        </div>
+
+        <div class="section footer-section" id="footer-section">
+            <p>Ich freue mich auf einen tollen Abend mit dir!</p>
+        </div>
     </div>
 
     <script src="script.js"></script>
