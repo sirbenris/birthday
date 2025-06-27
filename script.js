@@ -1,108 +1,101 @@
 document.addEventListener('DOMContentLoaded', () => {
     const introOverlay = document.querySelector('.intro-overlay');
-    const centeredCardWrapper = document.querySelector('.centered-card-wrapper');
-    const cardContainer = document.querySelector('.card-container');
-    const cards = document.querySelectorAll('.card');
-    const rsvpButton = document.querySelector('.rsvp-button');
-    const scrollIndicator = document.querySelector('.scroll-indicator');
+    const contentWrapper = document.querySelector('.content-wrapper');
+    const sections = document.querySelectorAll('.section'); // Alle Abschnitte, die animiert werden sollen
+    const rsvpYesButton = document.getElementById('whatsapp-yes-button');
+    const rsvpNoButton = document.getElementById('whatsapp-no-button');
+    const greetingElement = document.getElementById('greeting');
 
-    let currentCardIndex = 0;
-    const cardAnimationDelay = 1200; // Verzögerung zwischen dem Einblenden der Karten in ms
-    const cardTransitionDuration = 700; // Dauer der CSS-Transition einer Karte in ms
+    const introDuration = 2500; // Dauer des Intro-Overlays in ms
+    const sectionAnimationDelay = 600; // Verzögerung zwischen den Einblendungen der Sektionen in ms
 
-    // --- Intro-Animation ---
-    const introDuration = 2000; // 2 Sekunden für "Bald ist es soweit..."
+    // --- Funktion zur persönlichen Begrüßung ---
+    function getGuestNameFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let name = urlParams.get('name');
+        if (name) {
+            // Optional: Namen decodieren und nur den ersten Teil verwenden
+            name = decodeURIComponent(name.split(' ')[0]);
+            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(); // Erster Buchstabe groß, Rest klein
+        }
+        return null;
+    }
 
+    const guestName = getGuestNameFromUrl();
+    if (guestName) {
+        greetingElement.textContent = `Hallo ${guestName}!`;
+    } else {
+        greetingElement.textContent = `Hallo Freund!`; // Standardbegrüßung
+    }
+
+    // --- Intro-Overlay ausblenden und Hauptinhalt einblenden ---
     setTimeout(() => {
         if (introOverlay) {
             introOverlay.style.opacity = '0';
             introOverlay.style.visibility = 'hidden';
-        }
-
-        // --- Schritt 1: Wrapper für Karten einblenden ---
-        if (centeredCardWrapper) {
-            centeredCardWrapper.style.opacity = '1';
-            centeredCardWrapper.style.transform = 'translateY(0)';
-
-            // --- Schritt 2: Karten sequenziell übereinander einblenden ---
-            // Wir müssen overflow-x für den cardContainer anfangs verstecken
-            cardContainer.style.overflowX = 'hidden';
-
-            if (cards.length > 0) {
-                showNextCard();
+            // Nach dem Ausblenden des Overlays, zeige den Haupt-Content-Wrapper
+            if (contentWrapper) {
+                contentWrapper.style.opacity = '1';
+                contentWrapper.style.transform = 'translateY(0)';
+                
+                // Nun die einzelnen Sektionen nacheinander einfliegen lassen
+                animateSectionsSequentially(0);
             }
         }
     }, introDuration);
 
-    function showNextCard() {
-        if (currentCardIndex < cards.length) {
-            const cardToShow = cards[currentCardIndex];
-            
-            // Wenn es nicht die erste Karte ist, verstecke die vorherige Karte kurz,
-            // bevor die nächste erscheint, um den "übereinander" Effekt zu erzeugen.
-            if (currentCardIndex > 0) {
-                const prevCard = cards[currentCardIndex - 1];
-                prevCard.style.opacity = '0'; // Vorherige Karte ausblenden
-                // Setze die vorherige Karte nach kurzer Verzögerung auf absolute Position
-                // damit sie aus dem Flow genommen wird und die nächste Karte in die Mitte rücken kann
-                setTimeout(() => {
-                    prevCard.style.position = 'absolute';
-                    prevCard.style.zIndex = '-1'; // Optional: Nach hinten schicken
-                }, cardTransitionDuration); // Warte, bis die Ausblendung fertig ist
-            }
+    // --- Funktion zum sequenziellen Einfliegen der Sektionen ---
+    function animateSectionsSequentially(index) {
+        if (index < sections.length) {
+            const section = sections[index];
+            section.classList.add('show');
 
-            // Sicherstellen, dass die aktuelle Karte wieder relativ ist und z-index hoch
-            cardToShow.style.position = 'relative';
-            cardToShow.style.zIndex = '1';
-            cardToShow.classList.add('show'); // CSS-Klasse für die Animation hinzufügen
-
-            // Nach der Animation der aktuellen Karte, die nächste vorbereiten oder Karussell aktivieren
+            // Setze den Timeout für die nächste Sektion
             setTimeout(() => {
-                currentCardIndex++;
-                if (currentCardIndex < cards.length) {
-                    // Nächste Karte nach Verzögerung anzeigen
-                    setTimeout(showNextCard, cardAnimationDelay);
-                } else {
-                    // --- Schritt 3: Horizontales Scrollen aktivieren ---
-                    // Dies ist der Punkt, an dem alle Karten einzeln eingeblendet sind.
-                    // Jetzt werden alle Karten wieder im Flexbox-Flow positioniert und scrollbar gemacht.
-                    
-                    // Alle Karten wieder auf 'static' setzen und sichtbar machen,
-                    // falls sie unsichtbar gemacht wurden (für den 'übereinander' Effekt)
-                    cards.forEach(card => {
-                        card.style.position = 'static';
-                        card.style.opacity = '1';
-                        card.style.zIndex = 'auto';
-                    });
-
-                    cardContainer.style.overflowX = 'scroll'; // Horizontales Scrollen erlauben
-                    cardContainer.style.scrollSnapType = 'x mandatory'; // Scroll-Snap aktivieren
-                    
-                    // --- Scroll-Indikator einblenden ---
-                    if (scrollIndicator) {
-                        scrollIndicator.style.opacity = '1';
-                        scrollIndicator.style.visibility = 'visible';
-                    }
-
-                    // Sicherstellen, dass der Container die volle Breite der Karten einnehmen kann
-                    // (optional, falls es noch Layout-Probleme gibt)
-                    cardContainer.style.width = 'fit-content'; 
-                    centeredCardWrapper.style.justifyContent = 'flex-start'; // Wrapper links ausrichten für das Karussell
-                }
-            }, cardTransitionDuration); // Warte, bis die aktuelle Karte fertig animiert ist
+                animateSectionsSequentially(index + 1);
+            }, sectionAnimationDelay);
+        } else {
+            // Alle Sektionen sind eingeflogen, jetzt Scrollen aktivieren
+            document.body.style.overflowY = 'auto';
         }
     }
 
-    // --- RSVP-Button Animation beim Laden und Klicken ---
-    if (rsvpButton) {
-        // Die initiale Pop-Animation, sobald der Button sichtbar ist (Teil der Karten-Animation)
-        rsvpButton.addEventListener('click', (event) => {
+    // --- WhatsApp-Links generieren und Event Listener hinzufügen ---
+    // Ersetze 'DEINE_TELEFONNUMMER' mit deiner Nummer im internationalen Format (ohne +, Klammern, Leerzeichen)
+    // Beispiel: Deutschland +49 176 12345678 -> 4917612345678
+    const yourPhoneNumber = '49123456789'; // <<< HIER DEINE NUMMER ANPASSEN!
+
+    // Text für Zusage
+    const yesMessage = encodeURIComponent(`Hallo Ben, ich komme gerne zu deinem Geburtstag am 26.07.2025!`);
+    const yesWhatsappLink = `https://wa.me/${yourPhoneNumber}?text=${yesMessage}`;
+
+    // Text für Absage
+    const noMessage = encodeURIComponent(`Hallo Ben, vielen Dank für die Einladung, aber ich kann leider nicht zu deinem Geburtstag am 26.07.2025 kommen.`);
+    const noWhatsappLink = `https://wa.me/${yourPhoneNumber}?text=${noMessage}`;
+
+    if (rsvpYesButton) {
+        rsvpYesButton.href = yesWhatsappLink;
+        rsvpYesButton.addEventListener('click', (event) => {
+            // Optionale Vibration bei Klick auf Mobilgeräten
             if ('vibrate' in navigator) {
                 navigator.vibrate(50);
             }
-            rsvpButton.classList.add('clicked');
+            rsvpYesButton.classList.add('clicked');
             setTimeout(() => {
-                rsvpButton.classList.remove('clicked');
+                rsvpYesButton.classList.remove('clicked');
+            }, 300);
+        });
+    }
+
+    if (rsvpNoButton) {
+        rsvpNoButton.href = noWhatsappLink;
+        rsvpNoButton.addEventListener('click', (event) => {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+            rsvpNoButton.classList.add('clicked');
+            setTimeout(() => {
+                rsvpNoButton.classList.remove('clicked');
             }, 300);
         });
     }
