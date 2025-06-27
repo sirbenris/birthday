@@ -1,209 +1,116 @@
-:root {
-    --bg-dark: #202020; /* Haupt-Hintergrundfarbe aus dem Bild */
-    --text-light: #f0f0f0; /* Helle Schrift für Überschriften/wichtige Texte */
-    --text-medium: #a0a0a0; /* Mittleres Grau für normalen Text (ähnlich dem Datum im Bild) */
-    --accent-blue: #007bff; /* Ein Akzentblau, falls benötigt (nicht direkt im Bild, aber gängig) */
-    --accent-green: #28a745; /* Ein Akzentgrün für Erfolgsmeldungen/Bestätigungen */
-    --accent-orange: #ff7f50; /* Korallenrot/Orange für BBQ-Button wie zuvor */
-    --line-color: #383838; /* Dunklere Linie für Trenner (ähnlich dem Graphen) */
-}
-
 body {
-    font-family: 'Raleway', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: var(--bg-dark); /* Dunkler Hintergrund */
-    color: var(--text-medium); /* Standard-Textfarbe */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Start am oberen Rand, ermöglicht natürliches Scrollen */
-    min-height: 100vh;
-    box-sizing: border-box;
-    overflow-x: hidden; /* Horizontales Scrollen verhindern */
-    overflow-y: hidden; /* Vertikales Scrollen verhindern, wird per JS aktiviert */
-    position: relative;
-}
-
-/* Intro Overlay */
-.intro-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 1s ease-out, visibility 1s ease-out;
-}
-
-.intro-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5em;
-    color: var(--text-light); /* Helle Schrift für den Intro-Text */
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInIntroText 1.5s ease-out forwards;
-    text-align: center;
-    padding: 0 20px;
-}
-
-@keyframes fadeInIntroText {
-    0% { opacity: 0; transform: translateY(20px); }
-    50% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Content Wrapper für alle Informationen */
-.content-wrapper {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    color: #FFFFFF; /* Weiße Schrift */
+    background-color: #000000; /* Schwarzer Hintergrund */
+    overflow-x: hidden; /* Verhindert horizontales Scrollen */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Zentriert die Abschnitte */
-    gap: 40px; /* Mehr Abstand zwischen den Abschnitten für den "clean"-Look */
-    opacity: 0; /* Anfangs unsichtbar */
-    transform: translateY(20px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Mindestens die volle Höhe des Viewports */
 }
 
-/* Einzelne Sektionen (die "fliegenden" Elemente) */
-.section {
-    width: 100%;
-    /* Hintergrund und Schatten entfernt für den "Kartenstil" */
-    padding: 15px 0; /* Nur vertikales Padding, kein horizontaler Rahmen */
+/* Stile für die Intro-Abschnitte */
+.intro-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Jeder Intro-Abschnitt nimmt die volle Bildschirmhöhe ein */
     text-align: center;
-    opacity: 0; /* Anfangs unsichtbar */
-    transform: translateY(30px); /* Startposition für Einflug */
-    transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Federnder Effekt */
-    border-bottom: 1px solid var(--line-color); /* Dezente Trennlinie zwischen Sektionen */
+    opacity: 0; /* Standardmäßig unsichtbar */
+    transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
+    position: absolute; /* Positioniert sie übereinander */
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
-/* Die letzte Sektion soll keine Linie unten haben */
-.footer-section {
-    border-bottom: none;
-    margin-top: 20px; /* Etwas mehr Abstand zum Footer */
+.intro-section.visible {
+    opacity: 1; /* Sichtbar, wenn die Klasse 'visible' hinzugefügt wird */
+    position: relative; /* Nimmt wieder Platz im Flow ein, sobald sichtbar */
 }
 
-.section.show {
-    opacity: 1;
-    transform: translateY(0);
+.intro-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
 }
 
-h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.8em;
-    color: var(--text-light); /* Helle Schriftfarbe für Hauptüberschrift */
-    margin-bottom: 10px;
-    font-weight: 700;
+.intro-section h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
 }
 
-h2 {
-    font-family: 'Raleway', sans-serif;
-    font-size: 1.5em;
-    color: var(--text-light); /* Helle Schriftfarbe für Unterüberschriften */
-    font-weight: 400;
-    margin-top: 0;
-}
-
-h3 {
-    font-family: 'Playfair Display', serif;
-    color: var(--text-light); /* Helle Schriftfarbe für Sektionsüberschriften */
-    font-size: 1.6em;
-    margin-top: 0;
+.intro-section p {
+    font-size: 1.2em;
     margin-bottom: 10px;
 }
 
-p {
-    font-size: 1.1em;
+/* Stile für den finalen Scroll-Bereich */
+.full-info-section {
+    background-color: #1a1a1a; /* Dunklerer Grauton für den scrollbaren Bereich */
+    padding: 40px 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 600px; /* Maximale Breite für bessere Lesbarkeit */
+    margin-top: 50px; /* Abstand nach den Intro-Animationen */
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     line-height: 1.6;
-    margin-bottom: 5px;
-    color: var(--text-medium); /* Mittleres Grau für normalen Fließtext */
+    opacity: 0; /* Standardmäßig unsichtbar */
+    transition: opacity 1s ease-in-out; /* Übergang für Einblendung */
 }
 
-.map-link {
-    color: var(--accent-orange); /* Orange für Links */
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
+.full-info-section.visible {
+    opacity: 1;
 }
 
-.map-link:hover {
-    color: var(--text-light); /* Heller bei Hover */
+.full-info-section h2,
+.full-info-section h3 {
+    color: #FFD700; /* Goldene Farbe für Überschriften */
+    margin-top: 25px;
+    margin-bottom: 10px;
 }
 
-/* RSVP Buttons */
-.rsvp-section .rsvp-button {
-    display: block; /* Buttons untereinander */
-    width: calc(100% - 40px); /* Angepasste Breite wegen Padding */
-    max-width: 300px; /* Maximale Breite */
-    margin: 15px auto; /* Abstand zwischen Buttons und zentriert */
-    background-color: var(--accent-orange); /* Orange Button */
-    color: var(--text-light); /* Button-Text hell */
-    padding: 15px 20px;
+.full-info-section p {
+    margin-bottom: 15px;
+}
+
+.whatsapp-button {
+    display: inline-block;
+    background-color: #25D366; /* WhatsApp Grün */
+    color: #FFFFFF;
+    padding: 15px 25px;
     border-radius: 50px;
     text-decoration: none;
     font-size: 1.1em;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Dezenter Schatten */
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
-.rsvp-section .rsvp-button:hover {
-    background-color: #e66a3d; /* Dunklerer Ton beim Hover */
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+.whatsapp-button:hover {
+    background-color: #128C7E; /* Dunkleres Grün beim Hover */
 }
 
-.rsvp-section .rsvp-button.clicked {
-    transform: scale(0.95);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+.whatsapp-note {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: 10px;
 }
 
-.contact-info {
-    margin-top: 25px;
-    font-size: 1em;
-    color: var(--text-medium); /* Mittleres Grau */
-}
-
-.contact-info a {
-    color: var(--accent-orange); /* Orange für Kontaktlink */
+.map-link {
+    color: #87CEEB; /* Helle Blau für Links */
     text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
+    font-weight: bold;
 }
 
-.contact-info a:hover {
-    color: var(--text-light);
+.map-link:hover {
+    text-decoration: underline;
 }
 
-/* Responsive Anpassungen */
-@media (max-width: 480px) {
-    h1 {
-        font-size: 2.2em;
-    }
-    h2 {
-        font-size: 1.2em;
-    }
-    h3 {
-        font-size: 1.4em;
-    }
-    .section {
-        padding: 15px 10px; /* Weniger Padding auf kleinen Bildschirmen */
-        margin: 0 10px;
-    }
-    .rsvp-section .rsvp-button {
-        font-size: 1em;
-        padding: 12px 15px;
-    }
-    .intro-text {
-        font-size: 2em;
-    }
+/* Versteckt, bis JavaScript sie einblendet */
+.hidden {
+    display: none;
 }
